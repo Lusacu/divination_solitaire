@@ -15,4 +15,4 @@ MonoBehaviour:
   BackArt: {fileID: 0}
   Rank: 10
   Suit: 3
-  Art: {fileID: 21300000, guid: bbc8e3d32d8baa449be2c269183eeba5, type: 3}
+  Art: {fileID: 21300000, guid: 746c81343bb228b47bf78bbf2eeb3325, type: 3}

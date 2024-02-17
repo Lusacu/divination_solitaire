@@ -68,6 +68,14 @@ PrefabInstance:
       propertyPath: OnDragStart.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 6462243021217859703, guid: 93b7f5d60e554c54bb8ee95e357b9082, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: bbba82ed0b07e57449fd96f4cb7a7301, type: 3}
+    - target: {fileID: 6462243021699527057, guid: 93b7f5d60e554c54bb8ee95e357b9082, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: e47e6b0206b1aa843b0b38077cc21bb5, type: 3}
     - target: {fileID: 6462243022253552644, guid: 93b7f5d60e554c54bb8ee95e357b9082, type: 3}
       propertyPath: m_Name
       value: SolitaireCard
