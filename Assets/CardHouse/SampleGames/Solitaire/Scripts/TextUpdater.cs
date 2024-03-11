@@ -12,6 +12,6 @@ public class TextUpdater : MonoBehaviour
     {
         textMeshPro.text = inputField.text;
         string inputValue = inputField.text;
-        Debug.Log("Input Field Value: " + inputValue);
+        //Debug.Log("Input Field Value: " + inputValue);
     }
 }

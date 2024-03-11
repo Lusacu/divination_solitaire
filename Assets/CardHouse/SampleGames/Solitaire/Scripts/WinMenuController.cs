@@ -8,28 +8,59 @@ public class WinMenuController : MonoBehaviour
 {
     public GameObject[] scoreStacks; // Массив объектов ScoreStack
     public GameObject winMenu; // UI окно Win_menu_1
+    private bool win_menu_opened = false; // Переменная, чтобы отслеживать, открыто ли окно выигрыша
+    private bool buttonClicked = false; // Флаг для отслеживания нажатия кнопки
 
     void Update()
     {
-        bool allScoreStacksComplete = true; // Переменная, чтобы отслеживать, все ли ScoreStacks достигли 13 карт
-
-        foreach (GameObject scoreStack in scoreStacks)
+        if (!buttonClicked)
         {
-            // Получаем компонент CardGroup для каждого объекта ScoreStack
-            CardGroup cardGroup = scoreStack.GetComponent<CardGroup>();
+            bool allScoreStacksComplete = true; // Переменная, чтобы отслеживать, все ли ScoreStacks достигли 13 карт
 
-            // Проверяем, если MountedCards в текущем ScoreStack равно 13
-            if (cardGroup.MountedCards.Count != 13)
+            foreach (GameObject scoreStack in scoreStacks)
             {
-                allScoreStacksComplete = false; // Если количество карт не равно 13, устанавливаем в false
-                break; // Прерываем цикл, так как уже есть не полный ScoreStack
+                // Получаем компонент CardGroup для каждого объекта ScoreStack
+                CardGroup cardGroup = scoreStack.GetComponent<CardGroup>();
+
+                // Проверяем, если MountedCards в текущем ScoreStack равно 13
+                if (cardGroup.MountedCards.Count != 13)
+                {
+                    allScoreStacksComplete = false; // Если количество карт не равно 13, устанавливаем в false
+                    break; // Прерываем цикл, так как уже есть не полный ScoreStack
+                }
+            }
+
+            // Если все ScoreStacks содержат по 13 карт, включаем UI окно
+            if (allScoreStacksComplete && !win_menu_opened)
+            {
+                winMenu.SetActive(true); // Включаем окно только если someCondition истинно и winMenu не активно
+                win_menu_opened = true; // Устанавливаем флаг, что окно выигрыша открыто
             }
         }
+    }
 
-        // Если все ScoreStacks содержат по 13 карт, включаем UI окно
-        if (allScoreStacksComplete)
+    // Добавляем метод для обработки нажатия кнопки Button_divination
+    public void OnButtonDivinationClicked()
+    {
+        
+        // Проверяем, активно ли окно Win_menu_1
+        if (winMenu.activeSelf)
         {
-            winMenu.SetActive(true);
+            
+            // Если да, выключаем его
+            winMenu.SetActive(false);
+            win_menu_opened = false; // Устанавливаем флаг, что окно выигрыша закрыто
+            buttonClicked = true; // Устанавливаем флаг, что кнопка была нажата
+            
         }
     }
+    // сбрасываем параметры после старта новой игры
+    public void NewGameOnButtonDivinationClicked()
+    {
+        if (buttonClicked == true)
+        {
+            buttonClicked = false;
+        }
+    }
+
 }

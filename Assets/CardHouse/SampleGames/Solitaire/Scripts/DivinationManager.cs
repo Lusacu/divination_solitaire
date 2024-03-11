@@ -31,5 +31,13 @@ public class DivinationManager : MonoBehaviour
 
         // Assign the random divination to the UI text input
         textInput.text = randomLine;
+       // Debug.Log("Input divination: " + textInput.text);
+    }
+
+    // Метод для кнопки, который повторно загружает гадания
+    public void ReloadDivinations()
+    {
+        string csvFileName = Path.Combine(Application.streamingAssetsPath, relativeCsvFilePath);
+        LoadDivinations(csvFileName);
     }
 }
