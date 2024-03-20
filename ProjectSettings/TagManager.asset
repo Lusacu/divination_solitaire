@@ -11,7 +11,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - UI+
   - 
   - 
   - 
@@ -40,4 +40,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UIParticle
+    uniqueID: 2579109087
+    locked: 0
+  - name: UIButton
+    uniqueID: 272943999
     locked: 0
