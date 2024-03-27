@@ -68,6 +68,14 @@ PrefabInstance:
       propertyPath: OnDragStart.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 3320165275064857739, guid: 93b7f5d60e554c54bb8ee95e357b9082, type: 3}
+      propertyPath: dragSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 99a33141ba9ff5e4ea3ca0c370745e0a, type: 3}
+    - target: {fileID: 3320165275064857739, guid: 93b7f5d60e554c54bb8ee95e357b9082, type: 3}
+      propertyPath: releaseSound
+      value: 
+      objectReference: {fileID: 8300000, guid: d9cbc7c358792c241b9de5cf559096b6, type: 3}
     - target: {fileID: 6462243021217859703, guid: 93b7f5d60e554c54bb8ee95e357b9082, type: 3}
       propertyPath: m_Sprite
       value: 

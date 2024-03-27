@@ -1,3 +1,4 @@
+//using System.Diagnostics;
 using UnityEngine;
 
 namespace CardHouse
@@ -5,6 +6,11 @@ namespace CardHouse
     [RequireComponent(typeof(Homing)), RequireComponent(typeof(Turning)), RequireComponent(typeof(Scaling))]
     public class DragOperator : MonoBehaviour
     {
+
+        public AudioSource audioSource; // Ссылка на компонент AudioSource
+        public AudioClip dragSound; // Звук, который вы хотите воспроизводить
+        public AudioClip releaseSound; // Звук, который вы хотите воспроизводить при отпускании кнопки мыши
+
         public DragDetector MyDragDetector;
 
         public DragAction DragAction;
@@ -29,6 +35,16 @@ namespace CardHouse
             }
         }
 
+        void Start()
+        {
+            // Получаем компонент AudioSource из объекта с именем "DragCard_Sound"
+            audioSource = GameObject.Find("DragCard_Sound").GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                Debug.LogError("No AudioSource found on object named 'DragCard_Sound'!");
+            }
+        }
+
         public void SetDragState(bool newState)
         {
             if (MyDragDetector == null)
@@ -41,6 +57,12 @@ namespace CardHouse
                     MyScaling.StartSeeking(DragSwell);
                 }
                 Dragging.Instance.BeginDragging(MyDragDetector, MyHoming, MyTurning, PointUpWhenDragged);
+
+                // Воспроизводим звук, если audioSource найден и dragSound не равен null
+                if (newState && audioSource != null && dragSound != null)
+                {
+                    audioSource.PlayOneShot(dragSound);
+                }
             }
             else
             {
@@ -49,6 +71,12 @@ namespace CardHouse
                     MyScaling.StartSeeking(1f);
                 }
                 Dragging.Instance.StopDragging();
+
+                // Воспроизводим звук при отпускании кнопки мыши, если audioSource найден и releaseSound не равен null
+                if (audioSource != null && releaseSound != null)
+                {
+                    audioSource.PlayOneShot(releaseSound);
+                }
             }
         }
 
