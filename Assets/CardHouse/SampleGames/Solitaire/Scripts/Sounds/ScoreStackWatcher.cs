@@ -5,8 +5,7 @@ using UnityEngine;
 public class ScoreStackWatcher : MonoBehaviour
 {
     public CardHouse.CardGroup cardGroup; // Ссылка на компонент CardGroup
-    public AudioClip placeCardSoundEffect; // Звуковой эффект для воспроизведения при перевороте карты
-    public AudioClip shuffleSoundEffect; // Звуковой эффект для воспроизведения при перемешивании карт
+    public AudioClip soundEffect; // Звуковой эффект для воспроизведения
 
     private int previousMountedCardCount; // Предыдущее значение MountedCards
 
@@ -32,15 +31,15 @@ public class ScoreStackWatcher : MonoBehaviour
             // Проверяем, изменилось ли значение MountedCards
             if (cardGroup.MountedCards.Count != previousMountedCardCount)
             {
-                // Если значение MountedCards стало равным 0, значит карты были перемешаны
-                if (cardGroup.MountedCards.Count == 0 && shuffleSoundEffect != null)
+                // Если да, воспроизводим звуковой эффект через AudioSource объекта PlaceCard_Sound
+                GameObject placeCardSoundObject = GameObject.Find("PlaceCard_Sound"); // Ищем объект с именем "PlaceCard_Sound"
+                if (placeCardSoundObject != null)
                 {
-                    PlaySound(shuffleSoundEffect);
-                }
-                // В противном случае воспроизводим звук переворота карты
-                else if (placeCardSoundEffect != null)
-                {
-                    PlaySound(placeCardSoundEffect);
+                    AudioSource audioSource = placeCardSoundObject.GetComponent<AudioSource>(); // Получаем компонент AudioSource у найденного объекта
+                    if (audioSource != null && soundEffect != null)
+                    {
+                        audioSource.PlayOneShot(soundEffect); // Воспроизводим звук через AudioSource
+                    }
                 }
 
                 // Обновляем значение предыдущего количества карт
@@ -48,19 +47,6 @@ public class ScoreStackWatcher : MonoBehaviour
             }
 
             yield return null; // Ждем один кадр
-        }
-    }
-
-    void PlaySound(AudioClip clip)
-    {
-        GameObject placeCardSoundObject = GameObject.Find("PlaceCard_Sound");
-        if (placeCardSoundObject != null)
-        {
-            AudioSource audioSource = placeCardSoundObject.GetComponent<AudioSource>();
-            if (audioSource != null)
-            {
-                audioSource.PlayOneShot(clip);
-            }
         }
     }
 }
