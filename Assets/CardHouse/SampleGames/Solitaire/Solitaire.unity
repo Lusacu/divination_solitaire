@@ -21767,7 +21767,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardGroup: {fileID: 756446538}
-  soundEffect: {fileID: 8300000, guid: 4c8472a1530765b428fab8b17b2ef75f, type: 3}
+  placeCardSoundEffect: {fileID: 8300000, guid: 45febdc26c41f57488900484576f9899, type: 3}
+  shuffleSoundEffect: {fileID: 8300000, guid: 45febdc26c41f57488900484576f9899, type: 3}
 --- !u!1 &761700688
 GameObject:
   m_ObjectHideFlags: 0
@@ -33050,7 +33051,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardGroup: {fileID: 1525692107}
-  soundEffect: {fileID: 8300000, guid: 4c8472a1530765b428fab8b17b2ef75f, type: 3}
+  placeCardSoundEffect: {fileID: 8300000, guid: 45febdc26c41f57488900484576f9899, type: 3}
+  shuffleSoundEffect: {fileID: 8300000, guid: 45febdc26c41f57488900484576f9899, type: 3}
 --- !u!1 &1531615651
 GameObject:
   m_ObjectHideFlags: 0
@@ -38893,7 +38895,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardGroup: {fileID: 1462302603}
-  soundEffect: {fileID: 8300000, guid: 2addbc09b179bbd4086acd40b5968a28, type: 3}
+  placeCardSoundEffect: {fileID: 8300000, guid: 2addbc09b179bbd4086acd40b5968a28, type: 3}
+  shuffleSoundEffect: {fileID: 8300000, guid: 04f3c8c0822187a449aa87078a72bf35, type: 3}
 --- !u!1 &1626624741
 GameObject:
   m_ObjectHideFlags: 0
@@ -40572,7 +40575,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardGroup: {fileID: 1873899723}
-  soundEffect: {fileID: 8300000, guid: 4c8472a1530765b428fab8b17b2ef75f, type: 3}
+  placeCardSoundEffect: {fileID: 8300000, guid: 45febdc26c41f57488900484576f9899, type: 3}
+  shuffleSoundEffect: {fileID: 8300000, guid: 45febdc26c41f57488900484576f9899, type: 3}
 --- !u!1 &1895807821
 GameObject:
   m_ObjectHideFlags: 0
@@ -41051,7 +41055,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardGroup: {fileID: 1910871836}
-  soundEffect: {fileID: 8300000, guid: 4c8472a1530765b428fab8b17b2ef75f, type: 3}
+  placeCardSoundEffect: {fileID: 8300000, guid: 45febdc26c41f57488900484576f9899, type: 3}
+  shuffleSoundEffect: {fileID: 8300000, guid: 45febdc26c41f57488900484576f9899, type: 3}
 --- !u!1 &1915143329
 GameObject:
   m_ObjectHideFlags: 0
