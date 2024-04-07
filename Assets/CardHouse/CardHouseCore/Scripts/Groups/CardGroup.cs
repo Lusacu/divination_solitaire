@@ -28,12 +28,15 @@ namespace CardHouse
 
         int CollidersEntered = 0;
 
+		public bool deck = false;
+		
         public static CardGroup HilightedGroup
         {
             get
             {
                 return GroupsHoveredWithObjects.Count > 0 ? GroupsHoveredWithObjects[GroupsHoveredWithObjects.Count - 1] : null;
             }
+		
         }
 
         public static void AddHoveredGroup(CardGroup group)
@@ -79,7 +82,11 @@ namespace CardHouse
             }
 
             Dragging.Instance.OnDrag += HandleDragStart;
-            Dragging.Instance.OnDrop += HandleDragDrop;
+            if(!deck){
+				Dragging.Instance.OnDrop += HandleDragDrop; 
+			} else {
+				Dragging.Instance.OnDrop += HandleDragDropDeck; 
+			}
             Dragging.Instance.PostDrop += HandlePostDrop;
         }
 
@@ -106,20 +113,21 @@ namespace CardHouse
         {
             CollidersEntered = 0;
         }
-
-        void HandleDragDrop(DragDetector dragDetector)
+//
+        void HandleDragDropDeck(DragDetector dragDetector)
         {
             var cardComponent = dragDetector.GetComponent<Card>();
             var cardDragHandler = dragDetector.GetComponent<DragOperator>();
             var failedDragFromThisGroup = HilightedGroup == null && cardComponent != null && MountedCards.Contains(cardComponent);
-            if (failedDragFromThisGroup)
+
+			if (failedDragFromThisGroup)
             {
                 Strategy.Apply(MountedCards);
             }
 
             if (HilightedGroup != this)
                 return;
-
+//			return;
             if (cardComponent != null && cardDragHandler != null)
             {
                 var dropParams = new DropParams
@@ -127,7 +135,8 @@ namespace CardHouse
                     Source = cardComponent?.Group,
                     Target = this,
                     Card = cardComponent,
-                    DragType = cardDragHandler == null ? DragAction.None : cardDragHandler.DragAction
+                    //DragType = cardDragHandler == null ? DragAction.None : cardDragHandler.DragAction
+					DragType = DragAction.None
                 };
 
                 var isTargetable = true;
@@ -151,7 +160,146 @@ namespace CardHouse
                     cardComponent.Group?.ApplyStrategy();
                     return;
                 }
+				var act = cardComponent.GetComponent<DragOperator>().DragAction;
+				if (act == DragAction.Mount){
+					cardComponent.Group?.ApplyStrategy();
+                    return;
+				}
+                switch (act)
+                {
+					
+                    case DragAction.Mount:
+                        int? insertPoint = null;
 
+                        switch (Strategy.DragMountingMode)
+                        {
+                            case MountingMode.Top:
+                                break;
+                            case MountingMode.Bottom:
+                                insertPoint = 0;
+                                break;
+                            case MountingMode.Closest:
+                                var closestIndex = GetClosestMountedCardIndex(dragDetector.transform.position);
+                                if (closestIndex == null)
+                                    break;
+
+                                var diff = MountedCards[(int)closestIndex].transform.position - dragDetector.transform.position;
+                                insertPoint = diff.x > 0 ? closestIndex : closestIndex + 1;
+                                break;
+                        }
+
+                        if (cardComponent.GetComponent<CardLoyalty>() != null
+                            && GroupRegistry.Instance?.GetOwnerIndex(cardComponent.Group) != null
+                            && GroupRegistry.Instance?.GetOwnerIndex(this) == null)
+                        {
+                            cardComponent.GetComponent<CardLoyalty>().PlayerIndex = (int)GroupRegistry.Instance.GetOwnerIndex(cardComponent.Group);
+                        }
+
+                        Mount(cardComponent, insertPoint);
+                        cardComponent.HandlePlayed();
+                        break;
+                    case DragAction.UseAndDiscard:
+                        var discardGroup = GroupRegistry.Instance?.Get(GroupName.Discard, PhaseManager.Instance == null ? null : PhaseManager.Instance.PlayerIndex);
+                        if (discardGroup == null)
+                        {
+                            Debug.LogWarningFormat("{0}: Could not find Discard group to discard this card", name);
+                            cardComponent.Group?.ApplyStrategy();
+                            break;
+                        }
+
+                        var seekerSets = new SeekerSetList();
+                        var presentationTransform = PhaseManager.Instance?.CurrentPhase?.CardPresentationPosition;
+                        if (presentationTransform != null)
+                        {
+                            seekerSets.Add(new SeekerSet
+                            {
+                                Card = cardComponent,
+                                Homing = cardDragHandler.PresentationSeekers.Homing?.GetStrategy(presentationTransform.position),
+                                Turning = cardDragHandler.PresentationSeekers.Turning?.GetStrategy(CardHouse.Utils.CorrectAngle(presentationTransform.rotation.eulerAngles.z)),
+                                Scaling = cardDragHandler.PresentationSeekers.Scaling?.GetStrategy(presentationTransform.lossyScale.x)
+                            });
+                        }
+                        discardGroup.Mount(cardComponent, seekerSets: seekerSets);
+                        cardComponent.HandlePlayed();
+                        break;
+                    case DragAction.UseOnTargetAndDiscard:
+                        var discardGroup1 = GroupRegistry.Instance?.Get(GroupName.Discard, PhaseManager.Instance == null ? null : PhaseManager.Instance.PlayerIndex);
+                        var closestIndex1 = GetClosestMountedCardIndex(dragDetector.transform.position);
+                        if (discardGroup1 == null || closestIndex1 == null)
+                        {
+                            cardComponent.Group?.ApplyStrategy();
+                            break;
+                        }
+
+                        var seekerSets1 = new SeekerSetList();
+                        var presentationTransform1 = PhaseManager.Instance?.CurrentPhase?.CardPresentationPosition;
+                        if (presentationTransform1 != null)
+                        {
+                            seekerSets1.Add(new SeekerSet
+                            {
+                                Card = cardComponent,
+                                Homing = cardDragHandler.PresentationSeekers.Homing?.GetStrategy(presentationTransform1.position),
+                                Turning = cardDragHandler.PresentationSeekers.Turning?.GetStrategy(CardHouse.Utils.CorrectAngle(presentationTransform1.rotation.eulerAngles.z)),
+                                Scaling = cardDragHandler.PresentationSeekers.Scaling?.GetStrategy(presentationTransform1.lossyScale.x)
+                            });
+                        }
+                        discardGroup1.Mount(cardComponent, seekerSets: seekerSets1);
+                        var targetCard = MountedCards[(int)closestIndex1];
+                        OnCardUsedOnTarget?.Invoke(cardComponent, targetCard);
+                        cardComponent.HandlePlayed();
+                        break;
+                }
+            }
+        }
+
+        void HandleDragDrop(DragDetector dragDetector)
+        {
+            var cardComponent = dragDetector.GetComponent<Card>();
+            var cardDragHandler = dragDetector.GetComponent<DragOperator>();
+            var failedDragFromThisGroup = HilightedGroup == null && cardComponent != null && MountedCards.Contains(cardComponent);
+
+			if (failedDragFromThisGroup)
+            {
+                Strategy.Apply(MountedCards);
+            }
+
+
+            if (HilightedGroup != this)
+                return;
+
+
+            if (cardComponent != null && cardDragHandler != null)
+            {
+
+                var dropParams = new DropParams
+                {
+                    Source = cardComponent?.Group,
+                    Target = this,
+                    Card = cardComponent,
+                    DragType = cardDragHandler == null ? DragAction.None : cardDragHandler.DragAction
+                };
+                var isTargetable = true;
+                if (dropParams.DragType == DragAction.UseOnTargetAndDiscard)
+                {
+
+                    var closestIndex = GetClosestMountedCardIndex(cardComponent.transform.position);
+                    if (closestIndex != null)
+                    {
+
+                        var targetCardParams = new TargetCardParams
+                        {
+                            Source = cardComponent,
+                            Target = MountedCards[(int)closestIndex]
+                        };
+                        isTargetable = targetCardParams.Source.GetComponent<DragDetector>().TargetCardGates.AllUnlocked(targetCardParams)
+                                       && (targetCardParams.Target.GetComponent<DragDetector>()?.TargetCardGates.AllUnlocked(targetCardParams) ?? true);
+                    }
+                }
+                if (!DropGates.AllUnlocked(dropParams) || !dragDetector.GroupDropGates.AllUnlocked(dropParams) || !isTargetable) // Return to sender
+                {
+                    cardComponent.Group?.ApplyStrategy();
+                    return;
+                }
                 switch (cardComponent.GetComponent<DragOperator>().DragAction)
                 {
                     case DragAction.Mount:
