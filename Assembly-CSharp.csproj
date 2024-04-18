@@ -142,6 +142,7 @@
     <Compile Include="Assets\CardHouse\SampleGames\Tarot\Scripts\TarotSpread.cs" />
     <Compile Include="Assets\CardHouse\CardHouseCore\Scripts\Seekers\Components\BaseSeekerComponent.cs" />
     <Compile Include="Assets\CardHouse\CardHouseCore\Scripts\Groups\Layouts\SplayLayout.cs" />
+    <Compile Include="Assets\CardHouse\SampleGames\Solitaire\Scripts\pathTester.cs" />
     <Compile Include="Assets\CardHouse\CardHouseCore\Scripts\Seekers\Components\Homing.cs" />
     <Compile Include="Assets\CardHouse\CardHouseCore\Scripts\Groups\Layouts\SlotLayout.cs" />
     <Compile Include="Assets\CardHouse\CardHouseCore\Scripts\SpriteOperators\SpriteImageOperator.cs" />
